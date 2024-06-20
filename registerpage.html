@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <style>
+        /* styles.css */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+            color: #5fac5c;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 30px;
+            margin-top: 20px;
+            margin-left: 15px;
+        }
+
+        .navbar-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .navbar-toggler {
+            color: white;
+            cursor: pointer;
+            margin-left: 1120px;
+            margin-top: 0px;
+            font-size: 20px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #333;
+            width: 200px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 1em;
+            display: block;
+            border-bottom: 1px solid #444;
+        }
+
+        .navbar-menu a:hover {
+            background-color: #444;
+        }
+
+        .navbar-menu.active {
+            transform: translateX(0);
+        }
+
+        .signup-container {
+            max-width: 500px;
+            margin: 5em auto 2em auto;
+            /* Adjusting for fixed navbar */
+            padding: 2em;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .signup-container h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1em;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .password-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .password-container input {
+            flex-grow: 1;
+        }
+
+        .toggle-password {
+            margin-left: 0.5em;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 1em;
+            background-color: #5fac5c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 200px;
+        }
+
+        .signin-link {
+            margin-left: 720px;
+        }
+
+        .signin-link a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .signin-link a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #333;
+            margin-top: 20px;
+            color: white;
+            width: 100%;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        @media (max-width: 600px) {
+            .navbar-toggler {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Signup Form -->
+    <div class="signup-container">
+        <h1>Sign Up</h1>
+        <form>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" autocomplete="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" autocomplete="new-password" required>
+                    <span class="toggle-password" onclick="togglePassword('password')">&#128065;</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <div class="password-container">
+                    <input type="password" id="confirm-password" name="confirm-password" autocomplete="new-password"
+                        required>
+                    <span class="toggle-password" onclick="togglePassword('confirm-password')">&#128065;</span>
+                </div>
+            </div>
+            <button onclick="submitForm()" type="submit">Sign Up</button>
+        </form>
+    </div>
+    <div class="signin-link">
+        Already have an account? <a href="index.html">Sign-in</a>
+    </div>
+    <script>
+        function togglePassword(id) {
+            var input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
+            }
+        }
+        async function submitForm() {
+            event.preventDefault();
+            console.log("called Function");
+            const userName = document.getElementById("name").value;
+            console.log(userName);
+            const userEmail = document.getElementById("email").value;
+            console.log(userEmail);
+            const userPassword = document.getElementById("password").value;
+            console.log(userPassword);
+            const confirmPassword = document.getElementById("confirm-password").value;
+            console.log(confirmPassword);
+            if (userPassword !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+            const sendBody = JSON.stringify({
+                "email": userEmail,
+                "password": userPassword
+            });
+            console.log("The body is -----> ", sendBody);
+            try {
+                const res = await fetch("http://localhost:3000/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: sendBody
+                });
+                console.log("The response is --->", res.status);
+                if (res.status == 404) {
+                    alert("Sign-in failed! Try again with valid credentials!");
+                    return;
+                }
+                const responseData = await res.text();
+                alert(responseData);
+            } catch (err) {
+                console.error("Error during fetch : ", err);
+            }
+        }
+    </script>
+</body>
+
+</html>
